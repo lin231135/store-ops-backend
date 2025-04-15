@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:17
+    container_name: store_ops_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: tenants_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - backend_network
+
+  backend:
+    build: .
+    container_name: store_ops_backend
+    depends_on:
+      - db
+    ports:
+      - "9000:9000"
+    environment:
+      PGDATABASE: tenants_db
+      PGUSER: postgres
+      PGPASSWORD: 12345678
+      PGHOST: db
+      PGPORT: 5432
+      PORT: 9000
+    networks:
+      - backend_network
+
+volumes:
+  postgres_data:
+
+networks:
+  backend_network:
+    driver: bridge
