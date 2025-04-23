@@ -28,6 +28,8 @@ services:
       PGHOST: db
       PGPORT: 5432
       PORT: 9000
+    volumes:
+      - .:/app
     networks:
       - backend_network
 

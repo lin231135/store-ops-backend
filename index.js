@@ -1,14 +1,21 @@
 require("dotenv").config();
 const express = require("express");
 const pool = require("./config/db.config");
+const employeeRoutes = require("./routes/employeeRoute");
 
 const app = express();
 const PORT = process.env.PORT || 9000;
+
+app.use(express.json()); // Habilita JSON en req.body
+
+// Monta las rutas de empleados (login)
+app.use("/api/employee", employeeRoutes);
 
 app.get("/", (req, res) => {
   res.send("Servidor funcionando 🚀");
 });
 
+// Ruta de prueba para tenants si la necesitas aún
 app.get("/api/tenants", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM tenants");

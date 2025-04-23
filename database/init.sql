@@ -28,3 +28,22 @@ INSERT INTO tenants (nombre, estado) VALUES
     ('Tenant Gamma', FALSE),
     ('Tenant Delta', TRUE)
 ON CONFLICT (id) DO NOTHING;
+
+DROP TABLE IF EXISTS employee;
+
+CREATE TABLE employee (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  role VARCHAR(50) NOT NULL CHECK (role IN ('admin', 'cajero', 'inventario')),
+  username VARCHAR(100) UNIQUE NOT NULL,
+  password_hash VARCHAR(200) NOT NULL
+);
+
+-- Agrega usuario de prueba
+INSERT INTO employee (name, role, username, password_hash)
+VALUES (
+  'Juan Pérez',
+  'admin',
+  'juan',
+  '$2a$10$Xj9KfYvCEkZdfE7d3Y8cc.IpUlC2zZySYB1KPfUk7wYFg.vQaNRg2'
+);
