@@ -46,17 +46,8 @@ CREATE TABLE employee (
 -- Agrega usuario de prueba
 INSERT INTO employee (name, role, username, password_hash)
 VALUES (
-  'Juan Pérez',
+  'Dulce Ambrosio',
   'admin',
-  'juan',
-  '1234
-);
-
--- Agrega usuario de prueba
-INSERT INTO employee (name, role, username, password_hash)
-VALUES (
-  'Juan Pérez',
-  'admin',
-  'juan2',
-  '1234'
+  'amb231143',
+  '12345678'
 );
