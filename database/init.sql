@@ -31,6 +31,10 @@ ON CONFLICT (id) DO NOTHING;
 
 DROP TABLE IF EXISTS employee;
 
+-- ============================================
+-- V1: Crear tabla de gestion de empleados
+-- ============================================
+
 CREATE TABLE employee (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
@@ -45,5 +49,14 @@ VALUES (
   'Juan Pérez',
   'admin',
   'juan',
-  '$2a$10$Xj9KfYvCEkZdfE7d3Y8cc.IpUlC2zZySYB1KPfUk7wYFg.vQaNRg2'
+  '1234
+);
+
+-- Agrega usuario de prueba
+INSERT INTO employee (name, role, username, password_hash)
+VALUES (
+  'Juan Pérez',
+  'admin',
+  'juan2',
+  '1234'
 );
