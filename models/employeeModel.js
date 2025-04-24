@@ -5,4 +5,17 @@ const getEmployeeByUsername = async (username) => {
   return result.rows[0];
 };
 
-module.exports = { getEmployeeByUsername };
+const createEmployee = async ({ name, role, username, passwordHash }) => {
+  const result = await pool.query(
+    `INSERT INTO employee (name, role, username, password_hash)
+     VALUES ($1, $2, $3, $4)
+     RETURNING id, name, role, username`,
+    [name, role, username, passwordHash]
+  );
+  return result.rows[0];
+};
+
+module.exports = {
+  getEmployeeByUsername,
+  createEmployee,
+};
