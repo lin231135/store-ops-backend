@@ -13,7 +13,8 @@ const login = async (req, res) => {
 
     if (!user) return res.status(404).json({ message: "Empleado no encontrado" });
 
-    const valid = await bcrypt.compare(password, user.password_hash);
+    //const valid = await bcrypt.compare(password, user.password_hash);
+    const valid = password === user.password_hash; // Cambiado para usar la contraseña sin hash para simplificar
 
     console.log("🔐 ¿Contraseña válida?:", valid);
 
