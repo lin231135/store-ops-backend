@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 9000;
 app.use(express.json()); // Habilita JSON en req.body
 
 app.use("/api/employee", employeeRoutes);
+app.use("/api/cart", require("./routes/cartRoute"));
 
 app.get("/", (req, res) => {
   res.send("Servidor funcionando 🚀");
