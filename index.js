@@ -1,4 +1,4 @@
-require("dotenv").config();
+drequire("dotenv").config();
 const express = require("express");
 const pool = require("./config/db.config");
 const employeeRoutes = require("./routes/employeeRoute");
@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 9000;
 app.use(express.json()); // Habilita JSON en req.body
 
 app.use("/api/employee", employeeRoutes);
-app.use("/api/cart", require("./routes/cartRoute"));
+//app.use("/api/cart", require("./routes/cartRoute"));
 
 app.get("/", (req, res) => {
   res.send("Servidor funcionando 🚀");

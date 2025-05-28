@@ -1,7 +1,8 @@
 const Cart = require("../models/cartModel");
+const Product = require("../models/productModel");
 
 const addToCart = async (req, res) => {
-  const userId = req.user.id; // ← necesitas tener authMiddleware
+  const userId = req.user.id;
   const { productId, quantity } = req.body;
 
   if (!productId || !quantity) {
@@ -9,6 +10,15 @@ const addToCart = async (req, res) => {
   }
 
   try {
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Producto no encontrado" });
+    }
+
+    if (product.stock < quantity) {
+      return res.status(400).json({ message: "No hay suficiente stock disponible" });
+    }
+
     let cart = await Cart.findOne({ userId });
 
     if (!cart) {
@@ -39,7 +49,7 @@ const getCart = async (req, res) => {
     const cart = await Cart.findOne({ userId }).populate("products.productId");
 
     if (!cart) {
-      return res.status(200).json({ products: [] }); // carrito vacío
+      return res.status(200).json({ products: [] });
     }
 
     res.json(cart);
@@ -48,4 +58,4 @@ const getCart = async (req, res) => {
   }
 };
 
-module.exports = { addToCart };
+module.exports = { addToCart, getCart };
