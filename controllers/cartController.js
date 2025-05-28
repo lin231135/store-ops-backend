@@ -5,8 +5,8 @@ const addToCart = async (req, res) => {
   const userId = req.user.id;
   const { productId, quantity } = req.body;
 
-  if (!productId || !quantity) {
-    return res.status(400).json({ message: "productId y quantity son requeridos" });
+  if (!productId || !quantity || quantity <= 0) {
+    return res.status(400).json({ message: "Se requiere productId y quantity mayor a 0" });
   }
 
   try {
@@ -16,7 +16,7 @@ const addToCart = async (req, res) => {
     }
 
     if (product.stock < quantity) {
-      return res.status(400).json({ message: "No hay suficiente stock disponible" });
+      return res.status(400).json({ message: `Stock insuficiente. Solo quedan ${product.stock} unidades.` });
     }
 
     let cart = await Cart.findOne({ userId });
@@ -25,20 +25,21 @@ const addToCart = async (req, res) => {
       cart = new Cart({ userId, products: [] });
     }
 
-    const existingProductIndex = cart.products.findIndex(
+    const existingProduct = cart.products.find(
       p => p.productId.toString() === productId
     );
 
-    if (existingProductIndex >= 0) {
-      cart.products[existingProductIndex].quantity += quantity;
+    if (existingProduct) {
+      existingProduct.quantity += quantity;
     } else {
       cart.products.push({ productId, quantity });
     }
 
     await cart.save();
-    res.status(200).json(cart);
+    res.status(200).json({ message: "Producto agregado al carrito", cart });
   } catch (err) {
-    res.status(500).json({ message: "Error al agregar al carrito", error: err.message });
+    console.error("❌ Error en addToCart:", err);
+    res.status(500).json({ message: "Error interno al agregar al carrito", error: err.message });
   }
 };
 
@@ -48,13 +49,14 @@ const getCart = async (req, res) => {
   try {
     const cart = await Cart.findOne({ userId }).populate("products.productId");
 
-    if (!cart) {
-      return res.status(200).json({ products: [] });
+    if (!cart || cart.products.length === 0) {
+      return res.status(200).json({ message: "Carrito vacío", products: [] });
     }
 
-    res.json(cart);
+    res.status(200).json(cart);
   } catch (err) {
-    res.status(500).json({ message: "Error al obtener el carrito", error: err.message });
+    console.error("❌ Error en getCart:", err);
+    res.status(500).json({ message: "Error interno al obtener el carrito", error: err.message });
   }
 };
 
